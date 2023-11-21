@@ -2,7 +2,7 @@
 const nextConfig = {
     // add hostname to images
     images: {
-        domains: ['cdn-icons-png.flaticon.com'],
+        domains: ['cdn-icons-png.flaticon.com','example.com','unsplash.com','images.unsplash.com','media.istockphoto.com'],
     },
 }
 

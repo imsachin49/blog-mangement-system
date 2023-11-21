@@ -8,9 +8,10 @@ const { Op } = require("sequelize");
 
 // Create a Blog
 const createBlog=async (req,res)=>{
-    console.log(req.body);
-    console.log(req.user.id);
-    console.log(req.user.username);
+    const {title,description,blogImage,headline,categories}=req.body;
+    if(!title || !description || !blogImage || !headline || !categories){
+        return res.status(400).json({msg:"Please fill all fields"});
+    }
     try{
         const newBlog=await Blog.create({
             id:uuidv4(),
@@ -22,7 +23,7 @@ const createBlog=async (req,res)=>{
             categories:req.body.categories,
         });
         console.log(newBlog);
-        res.status(200).json({msg:"Blog created successfully"});
+        res.status(200).json({msg:"Blog created successfully",newBlog});
     }catch(err){
         res.status(500).json({msg:"Server Error"+err});
     }

@@ -1,10 +1,12 @@
+"use client"
 import Footer from '@/components/footer/Footer'
 import './globals.css'
 import { Inter } from 'next/font/google'
 const inter = Inter({ subsets: ['latin'] })
 import Head from 'next/head'
 import Navbar from '@/components/navbar/Navbar'
-
+import NextTopLoader from "nextjs-toploader";
+import ReduxStoreProvider from '@/redux/provider'
 
 export const metadata = {
   title: 'Create Next App',
@@ -16,12 +18,29 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <Head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;1,700&display=swap" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap" rel="stylesheet" />
       </Head>
-      <body className={inter.className}><Navbar />{children}<Footer /></body>
+      <body className={inter.className}>
+        <ReduxStoreProvider>
+          <NextTopLoader
+            color="#ff9800"
+            initialPosition={0.08}
+            crawlSpeed={200}
+            height={3}
+            crawl={true}
+            showSpinner={false}
+            easing="ease"
+            speed={200}
+            shadow="0 0 10px #ff9800,0 0 5px #ff9800"
+          />
+          <Navbar />
+          {children}
+          <Footer />
+        </ReduxStoreProvider>
+      </body>
     </html>
   )
 }

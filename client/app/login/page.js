@@ -1,19 +1,45 @@
 "use client"
 import Image from "next/image"
-import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { FcGoogle } from 'react-icons/fc'
-import {BsGithub} from 'react-icons/bs'
+import { BsGithub } from 'react-icons/bs'
 import Link from 'next/link'
+import { publicRequest } from "@/requestMethods"
+import { useDispatch } from "react-redux"
+import { setLogin } from "@/redux/userSlice"
 
-export default function page() {
+export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const router=useRouter();
+    const dispatch=useDispatch();
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
-    }
+        e.preventDefault();
+        try {
+            setLoading(true);
+            const res = await publicRequest.post(`/auth/login`, {
+                email,
+                password,
+            });
+            console.log("resss", res);
+            if (res.status == 200){
+                console.log(res.data);
+                dispatch(setLogin({
+                    user:res.data.user,
+                    token:res.data.token
+                }))
+                router.push('/');
+            }
+        } catch (error) {
+            alert("user login failed!");
+            console.error("Error registering user:", error);
+            return { error: "Failed to register user. Please try again later." };
+        }
+        setLoading(false);
+    };
 
     return (
         <div className="w-full m-0 p-0 flex justify-center items-center bg-[#ffffff]">
@@ -57,14 +83,14 @@ export default function page() {
                         </div>
                     </div>
                     <div className="w-[80%] flex items-center whitespace-nowrap">
-                    <span className="w-full h-[1px] text-gray-200 bg-gray-400"></span>
-                    <span className="text-md font-candara text-gray-600 px-2 whitespace-nowrap">Or Continue with</span>
-                    <span className="w-full h-[1px] text-gray-200 bg-gray-400"></span>
-                </div>
-                <div className="w-[80%] flex items-center whitespace-nowrap gap-2 md:gap-8 justify-center">
-                    <button className="border p-1 font-bold text-red-500 border-rose-500 flex items-center gap-2 px-4 rounded-md"><FcGoogle/> Google </button>
-                    <button className="border p-1 font-bold text-gray-800 border-gray-800 flex items-center gap-2 px-4 rounded-md"><BsGithub/> Github </button>
-                </div>
+                        <span className="w-full h-[1px] text-gray-200 bg-gray-400"></span>
+                        <span className="text-md font-candara text-gray-600 px-2 whitespace-nowrap">Or Continue with</span>
+                        <span className="w-full h-[1px] text-gray-200 bg-gray-400"></span>
+                    </div>
+                    <div className="w-[80%] flex items-center whitespace-nowrap gap-2 md:gap-8 justify-center">
+                        <button className="border p-1 font-bold text-red-500 border-rose-500 flex items-center gap-2 px-4 rounded-md"><FcGoogle /> Google </button>
+                        <button className="border p-1 font-bold text-gray-800 border-gray-800 flex items-center gap-2 px-4 rounded-md"><BsGithub /> Github </button>
+                    </div>
                 </form>
             </div>
         </div>

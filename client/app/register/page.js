@@ -1,23 +1,44 @@
 "use client"
 import Image from "next/image"
-import { useRouter } from "next/router"
 import { useState } from "react"
 import { FcGoogle } from 'react-icons/fc'
-import {BsGithub} from 'react-icons/bs'
+import { BsGithub } from 'react-icons/bs'
 import Link from 'next/link'
+import { registerUser } from "@/queries/auth/auth_queries"
+import { publicRequest } from "@/requestMethods"
+import { useRouter } from 'next/navigation'
 
-export default function page() {
+export default function Register() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [bio, setBio] = useState('');
-    // const [file, setFile] = useState(null)
-
+    const router = useRouter()
+    
+    // handle with status code??
     const handleSubmit = async (e) => {
-        e.preventDefault()
-        console.log(name, email, password)
-    }
+        e.preventDefault();
+        try {
+            setLoading(true);
+            const res = await publicRequest.post(`/auth/register`, {
+                username: name,
+                email,
+                password,
+                bio,
+            });
+            console.log("resss", res);
+            if(res.status==200){
+                router.push('/login')
+            }
+            alert(res.data.msg);
+        } catch (error) {
+            alert("user regsitertion failed!");
+            console.error("Error registering user:", error);
+            return { error: "Failed to register user. Please try again later." };
+        }
+        setLoading(false);
+    };
 
     return (
         <div className="w-full m-0 p-0 flex justify-center items-center bg-[#ffffff]">
@@ -88,8 +109,8 @@ export default function page() {
                         <span className="w-full h-[1px] text-gray-200 bg-gray-400"></span>
                     </div>
                     <div className="w-[80%] flex items-center whitespace-nowrap gap-4 justify-center">
-                    <button className="border p-1 font-bold text-red-500 border-rose-500 flex items-center gap-2 px-4 rounded-md"><FcGoogle/> Google </button>
-                        <button className="border p-1 font-bold text-gray-800 border-gray-800 flex items-center gap-2 px-4 rounded-md"><BsGithub/> Github </button>
+                        <button className="border p-1 font-bold text-red-500 border-rose-500 flex items-center gap-2 px-4 rounded-md"><FcGoogle /> Google </button>
+                        <button className="border p-1 font-bold text-gray-800 border-gray-800 flex items-center gap-2 px-4 rounded-md"><BsGithub /> Github </button>
                     </div>
                 </form>
             </div>

@@ -10,9 +10,12 @@ import { AiTwotoneDelete } from 'react-icons/ai'
 import { BiSolidCommentEdit } from 'react-icons/bi'
 import { RiSpeakFill } from 'react-icons/ri'
 import { useState, useEffect, useRef } from 'react';
+import { getUser } from "@/queries/user/user_queries"
+import moment from 'moment';
+import Link from 'next/link';
 
-export default function SingleBlog() {
-  const text = "In the age of digitalization, the world is moving towards a more modernized way of living. The internet has become a necessity for everyone. It has become a part of our daily lives. The internet has made our lives easier and more comfortable. It has made the world a global village. The internet has made it possible for us"
+export default function SingleBlog({ blogDetail }) {
+  const text = blogDetail?.description;
 
   const [isSpeaking, setIsSpeaking] = useState(false);
   const utteranceRef = useRef(null);
@@ -39,6 +42,23 @@ export default function SingleBlog() {
     }
   };
 
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchUserDetail = async () => {
+      try {
+        const res = await getUser({
+          userId: blogDetail.userId
+        });
+        setUser(res.user);
+      } catch (error) {
+        console.error("Error in fetchBlogs:", error);
+        setError("Failed to fetch blogs. Please try again later.");
+      }
+    };
+    fetchUserDetail();
+  }, [blogDetail?.userId])
 
   return (
     <div className='w-full px-1 mb-8'>
@@ -52,29 +72,31 @@ export default function SingleBlog() {
           <Image src={article1} height={44} width={44} className="rounded-full" alt="no" />
           <div className="height={44} w-full mx-1 p-1 flex flex-col">
             <span className="p-0 m-0 leading-[18px] font-bold text-lg italic flex items-center">
-              Jennifer Winget <sup><IoCheckmarkCircle color="cadetblue" className="mr-1" size={14} /></sup>
+              {user?.username ? user?.username : "unknown"} <sup><IoCheckmarkCircle color="cadetblue" className="mr-1" size={14} /></sup>
             </span>
             <span className="p-0 m-0 leading-[18px] text-[14px] text-gray-400 italic flex items-center my-[1px]">
               <span className='font-mono'>20&nbsp;</span> min read
-              <span className='font-extrabold text-[2rem]'>&nbsp;·&nbsp;</span> Apr
-              <span className='font-mono'>&nbsp;27,2018</span>
+              <span className='font-extrabold text-[2rem]'>&nbsp;·&nbsp;</span>
+              {moment(blogDetail?.createdAt)?.format('MMM-DD YYYY')}
             </span>
           </div>
         </div>
         <div className='flex items-center gap-2'>
           <AiTwotoneDelete color='crimson' size={24} className='cursor-pointer' />
-          <BiSolidCommentEdit color='green' size={24} className='cursor-pointer' />
+          <Link href={`/blog/create?id=${blogDetail?.id}`}>
+            <BiSolidCommentEdit color='green' size={24} className='cursor-pointer' />
+          </Link>
         </div>
       </div>
-      <p className="text-[#132431] text-[1.6rem] mt-5 mb-3 leading-[20px] font-candara font-bold">Help children get better education</p>
+      <p className="text-[#132431] text-[1.6rem] mt-5 mb-3 leading-[20px] font-candara font-bold">{blogDetail?.title}</p>
       <button onClick={handleSpeak} className='bg-gray-500 text-gray-200 px-4 py-2 rounded-md text-sm shadow-lg flex items-center'>
         <RiSpeakFill className='mr-1' size={20} /> {isSpeaking ? 'Pause' : 'Listen'}
       </button>
-      <p className="font-candara text-gray-600 py-4 pb-6 pt-12text-start leading-[1.31rem] text-[1rem]">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Egestas purus viverra accumsan in nisl nisi. Arcu cursus vitae congue mauris rhoncus aenean vel elit scelerisque. In egestas erat imperdiet sed euismod nisi porta lorem mollis. Morbi tristique senectus et netus. Mattis pellentesque id nibh tortor id aliquet lectus proin.
+      <p className="font-candara text-gray-600 py-4 pb-6 pt-12text-start leading-[1.31rem] text-[1rem]">
+        {blogDetail?.description}
         <br /><br />
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Egestas purus viverra accumsan in nisl nisi. Arcu cursus vitae congue mauris rhoncus aenean vel elit scelerisque. In egestas erat imperdiet sed euismod nisi porta lorem mollis. Morbi tristique senectus et netus.
-        <br /><br />
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Egestas purus viverra accumsan in nisl nisi. Arcu cursus vitae congue mauris rhoncus aenean vel elit scelerisque. In egestas erat imperdiet sed euismod nisi porta lorem mollis. Morbi tristique senectus et netus. Mattis pellentesque id nibh tortor id aliquet lectus proin. Sapien faucibus et molestie ac feugiat sed lectus vestibulum.</p>
+        {blogDetail?.description}
+      </p>
       <div className='w-full relative mb-8'>
         <textarea rows={4} placeholder='Leave your comment here' className="font-mono w-full max-w-[96%] bg-[#fff] rounded-md p-3 text-gray-700 border border-gray-400 outline-none" />
         <button className="cursor-pointer bg-[#1576DB] text-white border px-4 shadow-md py-[1px] rounded-md  border-[#1576DB] font-bold absolute bottom-3 right-10">Send</button>
