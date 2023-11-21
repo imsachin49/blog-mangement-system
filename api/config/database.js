@@ -1,3 +1,4 @@
+const pg = require('pg');
 const Sequelize = require('sequelize');
 const db = {};
 const dotenv=require('dotenv');
@@ -10,6 +11,7 @@ module.exports = new Sequelize(
     {
         host: process.env.DB_HOST,
         dialect:'postgres',
+        dialectModule: pg,
         operatorsAliases: false,
         pool: {
             max: 5,
