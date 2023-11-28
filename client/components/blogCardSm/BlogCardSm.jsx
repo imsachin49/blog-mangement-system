@@ -29,11 +29,13 @@ export default function BlogCardSm({ blog }) {
     return (
         <div className="flex flex-col rounded-md shadow-sh1">
             <div className="w-full h-[180px] relative rounded-t-md">
-                <Image src={article1} fill={true} alt="mo" className="rounded-t-md" />
+                <Image src={blog?.blogImage} fill={true} alt="mo" className="rounded-t-md" />
             </div>
             <div className="flex px-3 py-3 flex-col">
                 <Link href={`/blog/${blog.id}`} className="font-candara cursor-pointer text-[#183B56] text-[1.4rem] leading-[1.35rem] text-start font-bold">{blog?.title?.slice(0, 25)}</Link>
-                <p className="font-candara text-gray-600 py-[4px] text-start leading-[1.31rem]">{blog?.description?.slice(0, 111)}...</p>
+                <p className="font-candara text-gray-600 py-[4px] text-start leading-[1.31rem]">
+                    <div dangerouslySetInnerHTML={{ __html: blog?.description?.slice(0, 111) }} />
+                </p>
                 <div className="flex justify-between items-center">
                     <div className="flex py-4 pb-1 h-[60px] items-center">
                         <Image src={article1} height={44} width={44} className="rounded-full md:h-[44px] md:w-[44px] xs:h-[35px] xs:w-[35px]" alt="no" />

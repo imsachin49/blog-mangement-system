@@ -11,8 +11,8 @@ app.use(cors());
 
 app.use(express.json({ limit: "10mb", extended: true }));
 app.use(express.urlencoded({ extended: true }));
-var publicDir = require('path').join(__dirname,'/public'); 
-app.use(express.static(publicDir)); 
+var publicDir = require('path').join(__dirname, '/public');
+app.use(express.static(publicDir));
 app.use("/", routes);
 
 //if the request reaches here its an error
@@ -39,7 +39,7 @@ db.sequelize
     const server = app.listen(PORT, () => {
       console.log(`Server started on port ${PORT}`)
     })
-})
+  })
   .catch((err) => {
     console.log(err);
   })

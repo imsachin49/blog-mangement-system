@@ -3,11 +3,18 @@ const Models=require('../models/index');
 const User=Models.User;
 const Blog=Models.Blog;
 const Comment=Models.Comment;
+const { v4: uuidv4 } = require('uuid'); // Import UUID v4 generator
 
 // create a comment
 const createComment=async (req,res)=>{
+    const {userId,blogId,comment}=req.body;
     try{
-        const comment=await Comment.create(req.body);
+        const comment=await Comment.create({
+            id:uuidv4(),
+            userId,
+            blogId,
+            comment
+        })
         res.status(200).json({comment});
     }catch(err){
         res.status(500).json({msg:err.message});

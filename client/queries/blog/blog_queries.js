@@ -39,3 +39,13 @@ export const updateBlog=async(data)=>{
     return { error: "Failed to update blog. Please try again later." };
   }
 }
+
+export const getUserBlogs=async(data)=>{
+  try{
+    const res=await userRequest.get(`/users/user/${data.userId}`);
+    return res.data;
+  }catch (error) {
+    console.error("Error fetching user blogs:", error);
+    return { error: "Failed to fetch user blogs. Please try again later." };
+  }
+}

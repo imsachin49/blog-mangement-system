@@ -13,14 +13,18 @@ import { useState, useEffect, useRef } from 'react';
 import { getUser } from "@/queries/user/user_queries"
 import moment from 'moment';
 import Link from 'next/link';
+import { addComment } from "@/queries/comment/comment_queries";
+import { useSelector } from 'react-redux';
 
 export default function SingleBlog({ blogDetail }) {
   const text = blogDetail?.description;
+  const loggedInUser = useSelector(state => state?.user?.user);
 
   const [isSpeaking, setIsSpeaking] = useState(false);
   const utteranceRef = useRef(null);
   const [selectedVoice, setSelectedVoice] = useState(null);
   const voices = speechSynthesis.getVoices();
+  const [comment, setComment] = useState('');
 
   useEffect(() => {
     const voices = speechSynthesis.getVoices();
@@ -60,13 +64,32 @@ export default function SingleBlog({ blogDetail }) {
     fetchUserDetail();
   }, [blogDetail?.userId])
 
+  const handleAddComment = async () => {
+    if (!comment) return;
+    // check if user is logged in
+    if (!loggedInUser) {
+      alert("Please login to comment");
+      return;
+    }
+    try {
+      const res = await addComment({
+        blogId: blogDetail?.id,
+        comment: comment,
+        userId: loggedInUser?.id,
+      });
+      console.log("res", res);
+    } catch (error) {
+      console.error("Error in handleAddComment:", error);
+    }
+  }
+
   return (
     <div className='w-full px-1 mb-8'>
       <div className='flex items-center justify-between'>
         <h3 className='py-1 text-gray-700 mb-3'>Home{" "}/ Blog{" "} / Article Title</h3>
         <IoShareSocialSharp size={24} className='cursor-pointer' />
       </div>
-      <Image src={cover} alt="noImg" className='w-full h-full rounded-md max-h-[390px]' />
+      <img src={blogDetail?.blogImage ? blogDetail?.blogImage : cover} alt="noImg" className='w-full rounded-md max-h-[390px]' />
       <div className="flex justify-between items-center">
         <div className="flex py-4 pb-1">
           <Image src={article1} height={44} width={44} className="rounded-full" alt="no" />
@@ -93,13 +116,11 @@ export default function SingleBlog({ blogDetail }) {
         <RiSpeakFill className='mr-1' size={20} /> {isSpeaking ? 'Pause' : 'Listen'}
       </button>
       <p className="font-candara text-gray-600 py-4 pb-6 pt-12text-start leading-[1.31rem] text-[1rem]">
-        {blogDetail?.description}
-        <br /><br />
-        {blogDetail?.description}
+        <div dangerouslySetInnerHTML={{ __html: blogDetail?.description }} />
       </p>
       <div className='w-full relative mb-8'>
-        <textarea rows={4} placeholder='Leave your comment here' className="font-mono w-full max-w-[96%] bg-[#fff] rounded-md p-3 text-gray-700 border border-gray-400 outline-none" />
-        <button className="cursor-pointer bg-[#1576DB] text-white border px-4 shadow-md py-[1px] rounded-md  border-[#1576DB] font-bold absolute bottom-3 right-10">Send</button>
+        <textarea rows={4} placeholder='Leave your comment here' className="font-mono w-full max-w-[96%] bg-[#fff] rounded-md p-3 text-gray-700 border border-gray-400 outline-none" onChange={e => setComment(e.target.value)} />
+        <button className="cursor-pointer bg-[#1576DB] text-white border px-4 shadow-md py-[1px] rounded-md  border-[#1576DB] font-bold absolute bottom-3 right-10" onClick={handleAddComment}>Send</button>
       </div>
       <p className="text-[#0D2436] text-[1.4rem] leading-[15px] font-candara mb-4 font-bold">All Comments(<span className='font-mono'>10</span>)</p>
       <Comments />

@@ -95,7 +95,7 @@ const deleteBlog=async (req,res)=>{
 // get all blogs of all users also we need usereInfo of each user and need to add pagination and need 
 const getAllBlogs=async (req,res)=>{
     try{
-        const blogs=await Blog.findAll();
+        const blogs=await Blog.findAll({order:[['createdAt','DESC']]});
         res.status(200).json({blogs});
     }catch(err){
         res.status(500).json({msg:err.message});
@@ -145,6 +145,51 @@ const getAllBlogsOfCategory=async (req,res)=>{
     }
 }
 
+// // get all the blogs with blogImage where the query="https://example.com/" 
+// const getAllBlogsOfImage=async (req,res)=>{
+//     try{
+//         const blogs=await Blog.findAll({where:{blogImage:{[Op.like]:`%${req.params.id}%`}}});
+//         res.status(200).json({blogs});
+//     }catch(err){
+//         res.status(500).json({msg:err.message});
+//     }
+// }
+const getAllBlogsOfImage = async (req, res) => {
+    try {
+        const blogs = await Blog.findAll({
+            where: {
+                blogImage: {
+                    [Op.startsWith]: `https://example.com/`
+                }
+            }
+        });
+        res.status(200).json({ blogs });
+    } catch (err) {
+        res.status(500).json({ msg: err.message });
+    }
+};
+
+const deleteBlogsOfImage = async (req, res) => {
+    try {
+        const deletedRows = await Blog.destroy({
+            where: {
+                blogImage: {
+                    [Op.startsWith]: `https://example.com/`
+                }
+            }
+        });
+
+        if (deletedRows > 0) {
+            res.status(200).json({ message: `${deletedRows} blogs deleted successfully.` });
+        } else {
+            res.status(404).json({ message: 'No blogs found with the specified blog image URL.' });
+        }
+    } catch (err) {
+        res.status(500).json({ msg: err.message });
+    }
+};
+
+
 module.exports={
     createBlog,
     getBlog,
@@ -153,5 +198,7 @@ module.exports={
     getAllBlogs,
     getAllBlogsOfUser,
     getAllCommentsOfBlog,
-    addMultipleBlogs
+    addMultipleBlogs,
+    getAllBlogsOfImage,
+    deleteBlogsOfImage,
 }
