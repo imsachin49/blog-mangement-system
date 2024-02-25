@@ -9,8 +9,6 @@ const {
     getAllBlogsOfUser,
     getAllCommentsOfBlog,
     addMultipleBlogs,
-    getAllBlogsOfImage,
-    deleteBlogsOfImage
 } = require('../controllers/blogControllers');
 
 const {
@@ -42,12 +40,5 @@ router.get('/comments/:id', getAllCommentsOfBlog);
 
 // add multiple blogs
 router.post('/addMultiple',verifyToken, addMultipleBlogs);
-
-
-// get all blogs of a specific image
-// router.get('/image/:id', getAllBlogsOfImage);
-
-// delete all blogs of a specific image
-// router.delete('/delete-blogs/:id', deleteBlogsOfImage);
 
 module.exports = router;

@@ -22,9 +22,10 @@ app.use('/api/comments',commentRouter);
 
 // Test DB
 db.authenticate()
-    .then(() => console.log('Database connected...'))
-    .catch(err => console.log('Error: ' + err))
+  .then(() => console.log('Database connected...'))
+  .catch(err => console.log('Error: ' + err))
 
+// listen for requests
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
