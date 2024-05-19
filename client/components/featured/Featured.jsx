@@ -31,7 +31,7 @@ export default function Featured() {
                 <h1 className="text-[#183B56] text-[2.5rem] leading-[2.75rem] my-3 text-start font-extrabold">Featured Articles</h1>
                 <div className="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xs:grid-cols-1 lg:gap-6 md:gap-3 xs:gap-2">
                     {
-                        blogs.slice(0,9).map((m, index) => {
+                        blogs?.slice(0,9).map((m, index) => {
                             return (
                                 <BlogCardSm blog={m} key={index} />
                             )

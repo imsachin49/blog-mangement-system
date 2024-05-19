@@ -55,6 +55,7 @@ export default function NewBlog() {
         console.log("blogDetails", blogDetails)
         setTitle(blogDetails.blog.title);
         setVal(blogDetails.blog.description);
+        setFile(blogDetails.blog.blogImage);
         setHeadline(blogDetails.blog.headline);
         setSelectedCategories(blogDetails.blog.categories.split(','));
         setPreviewUrl(blogDetails.blog.blogImage || "");
@@ -105,20 +106,21 @@ export default function NewBlog() {
       alert("Please fill all the fields");
       return;
     }
-    const downloadURL = await uploadFileAndGetDownloadURL(file);
     try {
       if (blogId) {
         const res = await updateBlog({
           blogId,
           title,
           description: val,
-          blogImage: downloadURL,
+          blogImage: file,
           headline,
           categories: selectedCategories?.join(', '),
           userId: user?.id,
         });
         console.log("updated", res);
       } else {
+        const downloadURL = await uploadFileAndGetDownloadURL(file);
+        console.log("downloadURL", downloadURL);
         const res = await addNewBlog({
           title,
           description: val,

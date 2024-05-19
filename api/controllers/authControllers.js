@@ -5,8 +5,6 @@ const Models=require('../models/index');
 const User=Models.User;
 const { v4: uuidv4 } = require('uuid'); // Import UUID v4 generator
 
-console.log(uuidv4()); 
-
 // register user
 const registerUser= async (req,res)=>{
     const {username,email,password,profilePicture,bio}=req.body;

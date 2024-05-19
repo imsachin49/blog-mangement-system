@@ -1,18 +1,29 @@
-import React from 'react'
+"use client";
+import React,{useState,useEffect} from 'react'
 import Image from 'next/image'
 import gpt from '../../public/assets/images/gpt.jpg'
 import article1 from '../../public/assets/images/articles/article1.png'
 import { FaShare } from 'react-icons/fa'
 import { IoMdShare } from 'react-icons/io'
+import axios from 'axios';
 
 export default function UserBlogs() {
+  const [blogs,setBlogs] = useState([]);
+
+  // to get all blogs of the logged in user
+  useEffect(()=>{
+    const fetchUserBlogs=async()=>{
+      const res=await axios.get()
+    }
+  },[]);
+
   return (
     <div className='w-full p-1 grid grid-cols-7 gap-5 items-center justify-center pb-6 mb-0 '>
       <div className='col-span-6 flex flex-col'>
         <div className="flex h-fit items-center p-[2px] mb-2">
           <Image src={article1} height={34} width={34} className="rounded-full h-[34px] w-[34px] relative" alt="no" />
           <div className="flex flex-col ml-2">
-            <span className='m-0 p-0 font-candara text-gray-600 text-lg italic leading-[18px]'>Fernanado Doglio</span>
+            <span className='m-0 p-0 font-candara text-gray-600 text-lg italic leading-[18px]'>{}</span>
             <span className='m-0 p-0 font-candara text-xs text-gray-400 italic leading-[18px]'>Feb <span className='font-mono'>17</span></span>
           </div>
         </div>

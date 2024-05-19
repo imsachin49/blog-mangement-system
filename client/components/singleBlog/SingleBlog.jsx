@@ -86,7 +86,7 @@ export default function SingleBlog({ blogDetail }) {
   return (
     <div className='w-full px-1 mb-8'>
       <div className='flex items-center justify-between'>
-        <h3 className='py-1 text-gray-700 mb-3'>Home{" "}/ Blog{" "} / Article Title</h3>
+        <h3 className='py-1 text-gray-700 mb-3'>Home{" "}/ Blog{" "} / {blogDetail?.title}</h3>
         <IoShareSocialSharp size={24} className='cursor-pointer' />
       </div>
       <img src={blogDetail?.blogImage ? blogDetail?.blogImage : cover} alt="noImg" className='w-full rounded-md max-h-[390px]' />
@@ -104,12 +104,12 @@ export default function SingleBlog({ blogDetail }) {
             </span>
           </div>
         </div>
-        <div className='flex items-center gap-2'>
+        {blogDetail?.userId === loggedInUser?.id && <div className='flex items-center gap-2'>
           <AiTwotoneDelete color='crimson' size={24} className='cursor-pointer' />
           <Link href={`/blog/create?id=${blogDetail?.id}`}>
             <BiSolidCommentEdit color='green' size={24} className='cursor-pointer' />
           </Link>
-        </div>
+        </div>}
       </div>
       <p className="text-[#132431] text-[1.6rem] mt-5 mb-3 leading-[20px] font-candara font-bold">{blogDetail?.title}</p>
       <button onClick={handleSpeak} className='bg-gray-500 text-gray-200 px-4 py-2 rounded-md text-sm shadow-lg flex items-center'>
